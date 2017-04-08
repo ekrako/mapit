@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-inverse">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -20,9 +20,40 @@
     <div class="row">
         <div class="col-md-12">
             <div class="map">
-                <sebm-google-map [latitude]="lat" [longitude]="lng">
-                    <sebm-google-map-marker [latitude]="lat" [longitude]="lng"></sebm-google-map-marker>
+                <sebm-google-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="false" [zoomControl]="false" (mapClick)="mapClicked($event)">
+                    <sebm-google-map-marker *ngFor="let m of markers; let i = index" (markerClick)="clickedMarker(m, i)" [latitude]="m.lat" [longitude]="m.lng" [markerDraggable]="m.draggable" (dragEnd)="markerDragEnd(i, $event)">
+                        <sebm-google-map-info-window>
+                            <strong>{{m.name}}</strong>
+                            <br>
+                            <a class="delete" (click)="removeMarker(i)">Delete</a>
+                        </sebm-google-map-info-window>
+                    </sebm-google-map-marker>
                 </sebm-google-map>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Add new Marker</h3>
+                </div>
+                <div class="panel-body">
+                    <form (submit)="addMarker()">
+                        <label>Location Name:</label>
+                        <input type="text" [(ngModel)]="markerName" name="markerName">
+                        <label>Location Latitude:</label>
+                        <input type="text" [(ngModel)]="markerLat" name="markerLat">
+                        <label>Location Lonmgtitude:</label>
+                        <input type="text" [(ngModel)]="markerLng" name="markerLng">
+                        <label>Draggable:</label>
+                        <select type="check" [(ngModel)]="markerDraggable" name="markerDraggable">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                        <input type="submit" value="Map It!">
+                    </form>
+                </div>
             </div>
         </div>
     </div>
